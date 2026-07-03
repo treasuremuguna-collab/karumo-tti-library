@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karumo TTI - Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4fa;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #1a3c6e;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: white;
+            padding: 4px;
+        }
+
+        .logo h2 {
+            color: white;
+            font-size: 22px;
+        }
+
+        .logo h2 span {
+            color: #ffcc00;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav-right .user-badge {
+            color: white;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #dc3545;
+            border-color: #dc3545;
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .greeting-section {
+            background: linear-gradient(135deg, #1a3c6e, #2a5a9a);
+            color: white;
+            padding: 30px 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(26, 60, 110, 0.2);
+        }
+
+        .greeting-section h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .greeting-section h1 span {
+            color: #ffcc00;
+        }
+
+        .greeting-section .sub-info {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .greeting-section .sub-info strong {
+            color: #ffcc00;
+        }
+
+        .card {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: #1a3c6e;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .material-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 22px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: 0.3s;
+            border-left: 4px solid #1a3c6e;
+            position: relative;
+        }
+
+        .material-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .material-card h3 {
+            color: #1a3c6e;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .material-card .meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .material-card .meta span {
+            background: #f0f4fa;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-right: 6px;
+        }
+
+        .material-card .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .material-card .actions button {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .material-card .actions .btn-view {
+            background: #1a3c6e;
+            color: white;
+        }
+
+        .material-card .actions .btn-view:hover {
+            background: #ffcc00;
+            color: #1a3c6e;
+        }
+
+        .material-card .actions .btn-review {
+            background: #28a745;
+            color: white;
+        }
+
+        .material-card .actions .btn-review:hover {
+            background: #218838;
+        }
+
+        .material-card .actions .btn-quiz {
+            background: #6f42c1;
+            color: white;
+        }
+
+        .material-card .actions .btn-quiz:hover {
+            background: #5a32a3;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .status-badge.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.not-started {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .footer {
+            background: #0f2a4a;
+            color: #ccc;
+            padding: 20px 40px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+
+        .footer strong {
+            color: white;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 35px 40px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeUp 0.3s ease;
+        }
+
+        .modal-content h2 {
+            color: #1a3c6e;
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .modal-content .subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: 0.3s;
+            background: #f9fafc;
+            font-family: inherit;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #1a3c6e;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(26, 60, 110, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .modal-actions button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-actions .btn-save {
+            background: #1a3c6e;
+            color: white;
+        }
+
+        .modal-actions .btn-save:hover {
+            background: #ffcc00;
+            color: #1a3c6e;
+        }
+
+        .modal-actions .btn-close {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .modal-actions .btn-close:hover {
+            background: #ddd;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px 20px;
+            }
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+            }
+            .greeting-section h1 {
+                font-size: 24px;
+            }
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                padding: 24px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://i.ibb.co/jvS8mhN3/Screenshot-2026-07-02-004901.png" alt="Karumo TTI Logo" />
+            <h2>Karumo <span>TTI</span></h2>
+        </div>
+        <div class="nav-right">
+            <span class="user-badge" id="userNameDisplay">👤 Loading...</span>
+            <button class="btn-logout" onclick="logoutUser()">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- GREETING -->
+        <section class="greeting-section">
+            <h1 id="greetingMessage">📚 Welcome, <span id="studentName">Student</span>!</h1>
+            <p style="opacity:0.8; margin-top: 4px;">Access your notes, past papers, and track your progress.</p>
+            <div class="sub-info">
+                <span>🎓 Admission: <strong id="admissionNumber">---</strong></span>
+                <span>🏫 Department: <strong id="departmentName">---</strong></span>
+            </div>
+        </section>
+
+        <!-- MATERIALS -->
+        <div class="card">
+            <h2>📂 Available Materials</h2>
+            <div id="materialsContainer">
+                <div class="materials-grid" id="materialsGrid">
+                    <p style="color:#888; text-align:center; padding:20px; grid-column:1/-1;">Loading materials...</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== REVIEW MODAL ===== -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-content">
+            <h2>💬 Review Material</h2>
+            <p class="subtitle">Rate this material and leave feedback. The trainer will earn 20 points!</p>
+            <input type="hidden" id="reviewMaterialId" />
+            <input type="hidden" id="reviewTrainerId" />
+
+            <div class="form-group">
+                <label for="reviewRating">⭐ Rating</label>
+                <select id="reviewRating" required>
+                    <option value="" disabled selected>— Select Rating —</option>
+                    <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ Good</option>
+                    <option value="3">⭐⭐⭐ Average</option>
+                    <option value="2">⭐⭐ Poor</option>
+                    <option value="1">⭐ Very Poor</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reviewComment">💬 Comment (Optional)</label>
+                <textarea id="reviewComment" rows="3" placeholder="Share your thoughts..."></textarea>
+            </div>
+
+            <div id="reviewMessage" class="message"></div>
+
+            <div class="modal-actions">
+                <button class="btn-save" onclick="submitReview()">✅ Submit Review</button>
+                <button class="btn-close" onclick="closeReviewModal()">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- FIREBASE IMPORTS -->
+    <!-- ========================================= -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+        import { getDatabase, ref, get, set, push, update } from "firebase/database";
+
+        // 🔽 REPLACE WITH YOUR FIREBASE CONFIG 🔽
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD-sncC5VIIeYH0A8pdlemIjsZMmEQPUaI",
+  authDomain: "karumo-library.firebaseapp.com",
+  databaseURL: "https://karumo-library-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "karumo-library",
+  storageBucket: "karumo-library.firebasestorage.app",
+  messagingSenderId: "327025298202",
+  appId: "1:327025298202:web:e4e6f599a8168ee1587aa3",
+  measurementId: "G-5M12HQETWX"
+};
+        // 🔼 REPLACE WITH YOUR FIREBASE CONFIG 🔼
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // --- GLOBAL STATE ---
+        let currentUser = null;
+        let userData = null;
+
+        // =============================================
+        // AUTH STATE
+        // =============================================
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                console.log('✅ User logged in:', user.email);
+                await loadUserData(user.uid);
+                displayDashboard();
+                loadMaterials();
+            } else {
+                console.log('❌ No user logged in, redirecting to login...');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // =============================================
+        // LOAD USER DATA
+        // =============================================
+        async function loadUserData(uid) {
+            try {
+                const snapshot = await get(ref(db, 'users/' + uid));
+                if (snapshot.exists()) {
+                    userData = snapshot.val();
+                    console.log('📊 User data loaded:', userData);
+                } else {
+                    console.log('❌ User data not found');
+                    alert('User data not found. Please contact support.');
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                alert('Failed to load user data.');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // =============================================
+        // DISPLAY DASHBOARD
+        // =============================================
+        function displayDashboard() {
+            if (!userData) return;
+
+            const name = userData.displayName || userData.email?.split('@')[0] || 'Student';
+            document.getElementById('studentName').textContent = name;
+            document.getElementById('userNameDisplay').textContent = '👤 ' + name;
+
+            const admission = userData.admissionNumber || 'N/A';
+            document.getElementById('admissionNumber').textContent = admission;
+
+            const dept = userData.department || 'N/A';
+            const deptNames = {
+                'CIB': 'CIB — Computing & Information Business',
+                'AEE': 'AEE — Agriculture Engineering & Extension',
+                'FAD': 'FAD — Fashion & Design',
+                'BCE': 'BCE — Building & Construction Engineering',
+                'ELE': 'ELE — Electrical Engineering',
+                'HOT': 'HOT — Hospitality & Tourism'
+            };
+            document.getElementById('departmentName').textContent = deptNames[dept] || dept;
+
+            const hour = new Date().getHours();
+            let greeting = '📚 Welcome';
+            if (hour >= 5 && hour < 12) greeting = '🌅 Good morning';
+            else if (hour >= 12 && hour < 17) greeting = '☀️ Good afternoon';
+            else if (hour >= 17 && hour < 21) greeting = '🌇 Good evening';
+            else greeting = '🌙 Good night';
+            document.getElementById('greetingMessage').textContent = greeting + ', ' + name + '!';
+        }
+
+        // =============================================
+        // LOAD MATERIALS
+        // =============================================
+        async function loadMaterials() {
+            const grid = document.getElementById('materialsGrid');
+
+            try {
+                const snapshot = await get(ref(db, 'materials'));
+                if (!snapshot.exists()) {
+                    grid.innerHTML = '<p style="color:#888; text-align:center; padding:20px; grid-column:1/-1;">No materials available yet.</p>';
+                    return;
+                }
+
+                const materials = snapshot.val();
+                const materialsArray = Object.keys(materials).map(key => ({ id: key, ...materials[key] }));
+
+                // Filter by student's department
+                const filtered = userData.department ?
+                    materialsArray.filter(m => m.department === userData.department) :
+                    materialsArray;
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = '<p style="color:#888; text-align:center; padding:20px; grid-column:1/-1;">No materials available for your department yet.</p>';
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(material => {
+                    const hasQuestions = material.questions && material.questions.length > 0;
+                    html += `
+                        <div class="material-card">
+                            <h3>${material.title || 'Untitled'}</h3>
+                            <div class="meta">
+                                <span>${material.unit || 'General'}</span>
+                                <span>${material.department || 'N/A'}</span>
+                            </div>
+                            <div class="actions">
+                                ${material.fileUrl ? `<button class="btn-view" onclick="window.open('${material.fileUrl}', '_blank')">📥 View</button>` : ''}
+                                <button class="btn-review" onclick="openReviewModal('${material.id}')">💬 Review</button>
+                                ${hasQuestions ? `<button class="btn-quiz" onclick="alert('Quiz feature coming soon!')">📝 Quiz</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error loading materials:', error);
+                grid.innerHTML = '<p style="color:#dc3545; text-align:center; padding:20px; grid-column:1/-1;">❌ Failed to load materials.</p>';
+            }
+        }
+
+        // =============================================
+        // REVIEW FUNCTIONS
+        // =============================================
+        function openReviewModal(materialId) {
+            document.getElementById('reviewMaterialId').value = materialId;
+            document.getElementById('reviewRating').value = '';
+            document.getElementById('reviewComment').value = '';
+            document.getElementById('reviewMessage').classList.remove('show');
+            document.getElementById('reviewMessage').textContent = '';
+            document.getElementById('reviewModal').classList.add('show');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.remove('show');
+        }
+
+        async function submitReview() {
+            const materialId = document.getElementById('reviewMaterialId').value;
+            const rating = document.getElementById('reviewRating').value;
+            const comment = document.getElementById('reviewComment').value.trim();
+            const messageEl = document.getElementById('reviewMessage');
+
+            messageEl.classList.remove('show');
+            messageEl.textContent = '';
+
+            if (!rating) {
+                messageEl.textContent = '⚠️ Please select a rating.';
+                messageEl.className = 'message error show';
+                return;
+            }
+
+            try {
+                // Get material to find trainer
+                const materialSnapshot = await get(ref(db, 'materials/' + materialId));
+                if (!materialSnapshot.exists()) {
+                    messageEl.textContent = '❌ Material not found.';
+                    messageEl.className = 'message error show';
+                    return;
+                }
+                const material = materialSnapshot.val();
+                const trainerId = material.trainerId;
+
+                if (!trainerId) {
+                    messageEl.textContent = '❌ Trainer not found for this material.';
+                    messageEl.className = 'message error show';
+                    return;
+                }
+
+                // Save review
+                const reviewData = {
+                    materialId: materialId,
+                    materialTitle: material.title || 'Untitled',
+                    studentId: currentUser.uid,
+                    studentName: userData.displayName || userData.email?.split('@')[0] || 'Student',
+                    trainerId: trainerId,
+                    rating: parseInt(rating),
+                    comment: comment || 'No comment',
+                    reviewedAt: new Date().toISOString()
+                };
+
+                await push(ref(db, 'reviews'), reviewData);
+
+                // Add review to trainer's points
+                const trainerReviewRef = ref(db, 'users/' + trainerId + '/points/reviews/' + currentUser.uid);
+                await set(trainerReviewRef, {
+                    materialId: materialId,
+                    materialTitle: material.title || 'Untitled',
+                    points: 20,
+                    reviewedAt: new Date().toISOString()
+                });
+
+                // Update trainer's total points
+                await updateTrainerPoints(trainerId);
+
+                messageEl.textContent = '✅ Review submitted! Trainer earned 20 points.';
+                messageEl.className = 'message success show';
+
+                setTimeout(() => {
+                    closeReviewModal();
+                }, 2000);
+
+            } catch (error) {
+                console.error('Review error:', error);
+                messageEl.textContent = '❌ Failed to submit review: ' + error.message;
+                messageEl.className = 'message error show';
+            }
+        }
+
+        // =============================================
+        // UPDATE TRAINER POINTS
+        // =============================================
+        async function updateTrainerPoints(trainerId) {
+            try {
+                // Count reviews for this trainer
+                const reviewsSnapshot = await get(ref(db, 'reviews'));
+                let reviewCount = 0;
+                if (reviewsSnapshot.exists()) {
+                    const reviews = reviewsSnapshot.val();
+                    for (const key in reviews) {
+                        if (reviews[key].trainerId === trainerId) {
+                            reviewCount++;
+                        }
+                    }
+                }
+
+                // Get trainer's materials
+                const materialsSnapshot = await get(ref(db, 'materials'));
+                let noteCount = 0;
+                let catPoints = 0;
+                let projectCount = 0;
+
+                if (materialsSnapshot.exists()) {
+                    const materials = materialsSnapshot.val();
+                    for (const key in materials) {
+                        if (materials[key].trainerId === trainerId) {
+                            const type = materials[key].type || 'notes';
+                            if (type === 'notes') noteCount++;
+                            else if (type === 'cat') catPoints += materials[key].catMarks || 0;
+                            else if (type === 'project') projectCount++;
+                        }
+                    }
+                }
+
+                // Calculate points
+                const notePoints = noteCount * 50;
+                const projectPoints = projectCount * 200;
+                const reviewPoints = reviewCount * 20;
+
+                // Get quiz points
+                const quizSnapshot = await get(ref(db, 'users/' + trainerId + '/points/quizzes'));
+                let quizPoints = 0;
+                if (quizSnapshot.exists()) {
+                    const quizzes = quizSnapshot.val();
+                    quizPoints = Object.keys(quizzes).length * 20;
+                }
+
+                const totalPoints = notePoints + catPoints + projectPoints + reviewPoints + quizPoints;
+
+                // Save to trainer's points
+                await set(ref(db, 'users/' + trainerId + '/points'), {
+                    total: totalPoints,
+                    notes: notePoints,
+                    cats: catPoints,
+                    projects: projectPoints,
+                    reviews: reviewPoints,
+                    quizzes: quizPoints,
+                    updatedAt: new Date().toISOString()
+                });
+
+                // Update leaderboard
+                await updateLeaderboard(trainerId);
+
+            } catch (error) {
+                console.error('Error updating trainer points:', error);
+            }
+        }
+
+        // =============================================
+        // UPDATE LEADERBOARD
+        // =============================================
+        async function updateLeaderboard(trainerId) {
+            try {
+                // Get trainer's department
+                const trainerSnapshot = await get(ref(db, 'users/' + trainerId));
+                if (!trainerSnapshot.exists()) return;
+                const trainerData = trainerSnapshot.val();
+                const dept = trainerData.department || 'N/A';
+
+                // Get all trainers in same department
+                const usersSnapshot = await get(ref(db, 'users'));
+                if (!usersSnapshot.exists()) return;
+
+                const users = usersSnapshot.val();
+                const deptTrainers = [];
+
+                for (const uid in users) {
+                    if (users[uid].role === 'trainer' && users[uid].department === dept) {
+                        const points = users[uid].points?.total || 0;
+                        deptTrainers.push({
+                            uid: uid,
+                            name: users[uid].fullName || users[uid].displayName || 'Trainer',
+                            points: points
+                        });
+                    }
+                }
+
+                // Sort by points descending
+                deptTrainers.sort((a, b) => b.points - a.points);
+                deptTrainers.forEach((item, index) => {
+                    item.rank = index + 1;
+                });
+
+                // Save to leaderboard
+                const leaderboardRef = ref(db, 'leaderboard/' + dept);
+                const leaderboardData = {};
+                deptTrainers.forEach(item => {
+                    leaderboardData[item.uid] = {
+                        name: item.name,
+                        points: item.points,
+                        rank: item.rank
+                    };
+                });
+                await set(leaderboardRef, leaderboardData);
+
+            } catch (error) {
+                console.error('Error updating leaderboard:', error);
+            }
+        }
+
+        // =============================================
+        // LOGOUT
+        // =============================================
+        async function logoutUser() {
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Expose functions to global scope
+        window.openReviewModal = openReviewModal;
+        window.closeReviewModal = closeReviewModal;
+        window.submitReview = submitReview;
+        window.logoutUser = logoutUser;
+
+        console.log('🔥 Student Dashboard connected!');
+    </script>
+
+</body>
+</html>

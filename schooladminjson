@@ -1,0 +1,15 @@
+{
+  "system": {
+    "superAdminUid": "your-uid-here",
+    "schoolAdminUid": "school-admin-uid-here",
+    "departments": {
+      "CIB": "Computing & Information Business",
+      "AEE": "Agriculture Engineering & Extension",
+      "FAD": "Fashion & Design",
+      "BCE": "Building & Construction Engineering",
+      "ELE": "Electrical Engineering",
+      "HOT": "Hospitality & Tourism"
+    },
+    "lastUpdated": "2026-07-02T..."
+  }
+}

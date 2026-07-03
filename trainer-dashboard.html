@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karumo TTI - Trainer Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4fa;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: #1a3c6e;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: white;
+            padding: 4px;
+        }
+        .logo h2 {
+            color: white;
+            font-size: 22px;
+        }
+        .logo h2 span {
+            color: #ffcc00;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .nav-right .user-badge {
+            color: white;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+        .nav-right .points-badge {
+            background: #ffcc00;
+            color: #1a3c6e;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .btn-logout {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-logout:hover {
+            background: #dc3545;
+            border-color: #dc3545;
+            transform: scale(1.05);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .greeting-section {
+            background: linear-gradient(135deg, #1a3c6e, #2a5a9a);
+            color: white;
+            padding: 30px 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(26, 60, 110, 0.2);
+        }
+        .greeting-section h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .greeting-section h1 span {
+            color: #ffcc00;
+        }
+        .greeting-section .sub-info {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .greeting-section .sub-info strong {
+            color: #ffcc00;
+        }
+        .card {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: #1a3c6e;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            transition: 0.3s;
+            border-bottom: 4px solid #1a3c6e;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a3c6e;
+        }
+        .stat-card .label {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .stat-card.points {
+            border-bottom-color: #ffcc00;
+        }
+        .stat-card.notes {
+            border-bottom-color: #17a2b8;
+        }
+        .stat-card.cats {
+            border-bottom-color: #28a745;
+        }
+        .stat-card.reviews {
+            border-bottom-color: #6f42c1;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table th {
+            background: #1a3c6e;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+        table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        table tr:hover td {
+            background: #f9fafc;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: white;
+            border-radius: 16px;
+            padding: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        .tabs button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: transparent;
+            color: #888;
+            white-space: nowrap;
+        }
+        .tabs button:hover {
+            background: #f0f4fa;
+            color: #1a3c6e;
+        }
+        .tabs button.active {
+            background: #1a3c6e;
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 60, 110, 0.2);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: 0.3s;
+            background: #f9fafc;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1a3c6e;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(26, 60, 110, 0.1);
+        }
+        .form-group .hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #1a3c6e;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 6px;
+        }
+        .btn-primary:hover {
+            background: #ffcc00;
+            color: #1a3c6e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 204, 0, 0.3);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-danger {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-success {
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .message.show {
+            display: block;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .material-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 22px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: 0.3s;
+            border-left: 4px solid #1a3c6e;
+        }
+        .material-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .material-card h3 {
+            color: #1a3c6e;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        .material-card .meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .material-card .meta span {
+            background: #f0f4fa;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-right: 6px;
+        }
+        .material-card .points-earned {
+            font-size: 13px;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 8px;
+        }
+        .material-card .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .material-card .actions button {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .material-card .actions .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        .material-card .actions .btn-delete:hover {
+            background: #c82333;
+        }
+        .footer {
+            background: #0f2a4a;
+            color: #ccc;
+            padding: 20px 40px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        .footer strong {
+            color: white;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px 20px;
+            }
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .greeting-section h1 {
+                font-size: 24px;
+            }
+            .greeting-section .sub-info {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .tabs {
+                flex-wrap: wrap;
+            }
+            .tabs button {
+                flex: 1 1 40%;
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://i.ibb.co/jvS8mhN3/Screenshot-2026-07-02-004901.png" alt="Karumo TTI Logo" />
+            <h2>Karumo <span>TTI</span></h2>
+        </div>
+        <div class="nav-right">
+            <span class="user-badge" id="trainerNameDisplay">👨‍🏫 Loading...</span>
+            <span class="points-badge" id="pointsDisplay">⭐ 0 pts</span>
+            <button class="btn-logout" onclick="logoutUser()">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <section class="greeting-section">
+            <h1 id="greetingMessage">👨‍🏫 Welcome back, <span id="trainerName">Trainer</span>!</h1>
+            <p style="opacity:0.8; margin-top:4px;">Manage your materials and track your impact.</p>
+            <div class="sub-info">
+                <span>🏫 Department: <strong id="departmentName">---</strong></span>
+                <span>📚 Materials: <strong id="materialCount">0</strong></span>
+                <span>⭐ Total Points: <strong id="totalPoints">0</strong></span>
+            </div>
+        </section>
+
+        <div class="stats-grid">
+            <div class="stat-card points"><div class="number" id="statPoints">0</div><div class="label">⭐ Total Points</div></div>
+            <div class="stat-card notes"><div class="number" id="statNotes">0</div><div class="label">📄 Notes Uploaded</div></div>
+            <div class="stat-card cats"><div class="number" id="statCats">0</div><div class="label">📝 CATs Uploaded</div></div>
+            <div class="stat-card reviews"><div class="number" id="statReviews">0</div><div class="label">💬 Reviews Received</div></div>
+        </div>
+
+        <!-- POINTS TABLE -->
+        <div class="card">
+            <h2>📊 How Points Are Earned</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Action</th><th>Points</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td>📄 Upload Notes</td><td><strong>50</strong></td><td>Per notes uploaded</td></tr>
+                        <tr><td>📝 Upload CAT</td><td><strong>= CAT Marks</strong></td><td>e.g., 30/30 = 30 points</td></tr>
+                        <tr><td>📁 Upload Project</td><td><strong>200</strong></td><td>Per project uploaded</td></tr>
+                        <tr><td>💬 Student Review</td><td><strong>20</strong></td><td>Per student review</td></tr>
+                        <tr><td>❓ Student Answers Quiz</td><td><strong>20</strong></td><td>Per student who completes quiz</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="active" onclick="switchTab('upload')">📤 Upload</button>
+            <button onclick="switchTab('materials')">📂 My Materials</button>
+        </div>
+
+        <!-- TAB 1: UPLOAD -->
+        <div class="tab-content active" id="tab-upload">
+            <div class="card">
+                <h2>📤 Upload New Material</h2>
+                <p style="color:#888; margin-bottom:16px;">Share notes, CATs, or projects with your students.</p>
+                <div id="uploadMessage" class="message"></div>
+
+                <div class="form-group">
+                    <label for="materialTitle">📝 Title</label>
+                    <input type="text" id="materialTitle" placeholder="e.g., Introduction to ICT" />
+                </div>
+
+                <div class="form-group">
+                    <label for="materialUnit">📚 Unit/Course Code</label>
+                    <input type="text" id="materialUnit" placeholder="e.g., ICT 101" />
+                </div>
+
+                <div class="form-group">
+                    <label for="materialType">📂 Material Type</label>
+                    <select id="materialType" onchange="toggleCATFields()">
+                        <option value="notes">📄 Notes</option>
+                        <option value="cat">📝 CAT</option>
+                        <option value="project">📁 Project</option>
+                    </select>
+                    <div class="hint" id="typeHint">Notes = 50 points, CAT = marks-based points, Project = 200 points</div>
+                </div>
+
+                <div class="form-group" id="catMarksGroup" style="display:none;">
+                    <label for="catMarks">📊 CAT Marks</label>
+                    <input type="number" id="catMarks" placeholder="e.g., 30" min="1" max="100" />
+                </div>
+
+                <!-- ===== SIMPLE URL INPUT (Works with Google Drive, OneDrive, etc.) ===== -->
+                <div class="form-group">
+                    <label for="materialFileUrl">🔗 File URL (Google Drive, OneDrive, etc.)</label>
+                    <input type="url" id="materialFileUrl" placeholder="https://drive.google.com/..." />
+                    <div class="hint">
+                        Upload your file to Google Drive → Share → "Anyone with the link" → Paste the link here.
+                        <br />
+                        <strong>Tip:</strong> For Google Drive, use this format:
+                        <br />
+                        <code style="background:#f0f4fa;padding:2px 8px;border-radius:4px;">https://drive.google.com/file/d/FILE_ID/view?usp=sharing</code>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="uploadBtn" onclick="uploadMaterial()">📤 Upload Material</button>
+            </div>
+        </div>
+
+        <!-- TAB 2: MY MATERIALS -->
+        <div class="tab-content" id="tab-materials">
+            <div class="card">
+                <h2>📂 My Uploaded Materials</h2>
+                <div id="materialsContainer">
+                    <div class="materials-grid" id="materialsGrid">
+                        <p style="color:#888;text-align:center;padding:20px;grid-column:1/-1;">Loading materials...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 <strong>Karumo Technical Training Institute</strong> — E-Library Project</p>
+    </footer>
+
+    <!-- ========================================= -->
+    <!-- FIREBASE IMPORTS -->
+    <!-- ========================================= -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+        import { getDatabase, ref, get, set, push, remove } from "firebase/database";
+
+        // 🔽 REPLACE WITH YOUR FIREBASE CONFIG 🔽
+        const firebaseConfig = {
+            apiKey: "YOUR-API-KEY",
+            authDomain: "YOUR-PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com",
+            projectId: "YOUR-PROJECT",
+            storageBucket: "YOUR-PROJECT.appspot.com",
+            messagingSenderId: "YOUR-SENDER-ID",
+            appId: "YOUR-APP-ID"
+        };
+        // 🔼 REPLACE WITH YOUR FIREBASE CONFIG 🔼
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // --- GLOBAL STATE ---
+        let currentUser = null;
+        let userData = null;
+        let trainerMaterials = [];
+
+        // --- EXPOSE FUNCTIONS ---
+        window.switchTab = switchTab;
+        window.toggleCATFields = toggleCATFields;
+        window.uploadMaterial = uploadMaterial;
+        window.logoutUser = logoutUser;
+        window.deleteMaterial = deleteMaterial;
+
+        // =============================================
+        // AUTH STATE
+        // =============================================
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadUserData(user.uid);
+                await loadTrainerMaterials(user.uid);
+                displayDashboard();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // =============================================
+        // LOAD USER DATA
+        // =============================================
+        async function loadUserData(uid) {
+            try {
+                const snapshot = await get(ref(db, 'users/' + uid));
+                if (snapshot.exists()) {
+                    userData = snapshot.val();
+                } else {
+                    alert('User data not found.');
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // =============================================
+        // LOAD TRAINER MATERIALS
+        // =============================================
+        async function loadTrainerMaterials(uid) {
+            try {
+                const snapshot = await get(ref(db, 'materials'));
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    trainerMaterials = Object.keys(data)
+                        .filter(key => data[key].trainerId === uid)
+                        .map(key => ({ id: key, ...data[key] }));
+                } else {
+                    trainerMaterials = [];
+                }
+            } catch (error) {
+                console.error('Error loading materials:', error);
+            }
+        }
+
+        // =============================================
+        // DISPLAY DASHBOARD
+        // =============================================
+        function displayDashboard() {
+            if (!userData) return;
+
+            const hour = new Date().getHours();
+            let greeting = '👨‍🏫 Welcome back';
+            if (hour >= 5 && hour < 12) greeting = '🌅 Good morning';
+            else if (hour >= 12 && hour < 17) greeting = '☀️ Good afternoon';
+            else if (hour >= 17 && hour < 21) greeting = '🌇 Good evening';
+            else greeting = '🌙 Good night';
+            const name = userData.fullName || userData.displayName || 'Trainer';
+            document.getElementById('greetingMessage').textContent = greeting + ', ' + name + '!';
+            document.getElementById('trainerName').textContent = name;
+            document.getElementById('trainerNameDisplay').textContent = '👨‍🏫 ' + name;
+
+            const dept = userData.department || 'N/A';
+            const deptNames = {
+                'CIB': 'CIB — Computing & Information Business',
+                'AEE': 'AEE — Agriculture Engineering & Extension',
+                'FAD': 'FAD — Fashion & Design',
+                'BCE': 'BCE — Building & Construction Engineering',
+                'ELE': 'ELE — Electrical Engineering',
+                'HOT': 'HOT — Hospitality & Tourism'
+            };
+            document.getElementById('departmentName').textContent = deptNames[dept] || dept;
+
+            const points = userData.points || { total: 0 };
+            document.getElementById('pointsDisplay').textContent = '⭐ ' + points.total + ' pts';
+            document.getElementById('totalPoints').textContent = points.total || 0;
+
+            const notes = trainerMaterials.filter(m => m.type === 'notes' || !m.type);
+            const cats = trainerMaterials.filter(m => m.type === 'cat');
+            const reviews = userData.points?.reviews ? Object.keys(userData.points.reviews).length : 0;
+
+            document.getElementById('statPoints').textContent = points.total || 0;
+            document.getElementById('statNotes').textContent = notes.length;
+            document.getElementById('statCats').textContent = cats.length;
+            document.getElementById('statReviews').textContent = reviews;
+            document.getElementById('materialCount').textContent = trainerMaterials.length;
+
+            displayMaterials();
+        }
+
+        // =============================================
+        // DISPLAY MATERIALS
+        // =============================================
+        function displayMaterials() {
+            const grid = document.getElementById('materialsGrid');
+
+            if (trainerMaterials.length === 0) {
+                grid.innerHTML = '<p style="color:#888;text-align:center;padding:20px;grid-column:1/-1;">You haven\'t uploaded any materials yet.</p>';
+                return;
+            }
+
+            let html = '';
+            trainerMaterials.forEach(material => {
+                const pointsEarned = material.type === 'notes' ? 50 :
+                    material.type === 'cat' ? (material.catMarks || 0) :
+                    material.type === 'project' ? 200 : 0;
+                const typeLabel = material.type === 'notes' ? '📄 Notes' :
+                    material.type === 'cat' ? '📝 CAT' :
+                    material.type === 'project' ? '📁 Project' : '📄 General';
+
+                html += `
+                    <div class="material-card">
+                        <h3>${material.title || 'Untitled'}</h3>
+                        <div class="meta">
+                            <span>${material.unit || 'N/A'}</span>
+                            <span>${typeLabel}</span>
+                        </div>
+                        <div class="points-earned">⭐ +${pointsEarned} points</div>
+                        <div class="actions">
+                            ${material.fileUrl ? `<a href="${material.fileUrl}" target="_blank" class="btn-success" style="padding:6px 16px;border-radius:30px;font-weight:600;font-size:13px;text-decoration:none;color:white;background:#28a745;display:inline-block;">📥 View</a>` : ''}
+                            <button class="btn-delete" onclick="deleteMaterial('${material.id}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // =============================================
+        // TOGGLE CAT FIELDS
+        // =============================================
+        function toggleCATFields() {
+            const type = document.getElementById('materialType').value;
+            const catGroup = document.getElementById('catMarksGroup');
+            const hint = document.getElementById('typeHint');
+
+            if (type === 'cat') {
+                catGroup.style.display = 'block';
+                hint.textContent = 'CAT = marks-based points (e.g., 30/30 = 30 points)';
+            } else if (type === 'project') {
+                catGroup.style.display = 'none';
+                hint.textContent = 'Project = 200 points';
+            } else {
+                catGroup.style.display = 'none';
+                hint.textContent = 'Notes = 50 points';
+            }
+        }
+
+        // =============================================
+        // SWITCH TABS
+        // =============================================
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tabs button').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.querySelector(`.tabs button[onclick="switchTab('${tab}')"]`).classList.add('active');
+        }
+
+        // =============================================
+        // UPLOAD MATERIAL (URL-based)
+        // =============================================
+        async function uploadMaterial() {
+            const title = document.getElementById('materialTitle').value.trim();
+            const unit = document.getElementById('materialUnit').value.trim();
+            const type = document.getElementById('materialType').value;
+            const catMarks = parseInt(document.getElementById('catMarks').value) || 0;
+            const fileUrl = document.getElementById('materialFileUrl').value.trim();
+            const messageEl = document.getElementById('uploadMessage');
+            const btn = document.getElementById('uploadBtn');
+
+            messageEl.classList.remove('show');
+            messageEl.textContent = '';
+
+            if (!title || !unit) {
+                messageEl.className = 'message error show';
+                messageEl.textContent = '⚠️ Please fill in the title and unit.';
+                return;
+            }
+
+            if (type === 'cat' && !catMarks) {
+                messageEl.className = 'message error show';
+                messageEl.textContent = '⚠️ Please enter CAT marks.';
+                return;
+            }
+
+            if (!fileUrl) {
+                messageEl.className = 'message error show';
+                messageEl.textContent = '⚠️ Please paste the file URL from Google Drive, OneDrive, or any cloud service.';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ Uploading...';
+
+            try {
+                const newMaterialRef = push(ref(db, 'materials'));
+                await set(newMaterialRef, {
+                    title: title,
+                    unit: unit,
+                    type: type,
+                    fileUrl: fileUrl,
+                    catMarks: type === 'cat' ? catMarks : null,
+                    department: userData.department || 'N/A',
+                    trainerId: currentUser.uid,
+                    trainerName: userData.fullName || userData.displayName || 'Trainer',
+                    uploadedAt: new Date().toISOString(),
+                    questions: []
+                });
+
+                // Update trainer points
+                await updateTrainerPoints(currentUser.uid);
+
+                const pointsEarned = type === 'notes' ? 50 : type === 'project' ? 200 : catMarks;
+                messageEl.className = 'message success show';
+                messageEl.textContent = `✅ Material uploaded! You earned ${pointsEarned} points.`;
+
+                document.getElementById('materialTitle').value = '';
+                document.getElementById('materialUnit').value = '';
+                document.getElementById('materialFileUrl').value = '';
+                document.getElementById('catMarks').value = '';
+
+                await loadTrainerMaterials(currentUser.uid);
+                displayDashboard();
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                messageEl.className = 'message error show';
+                messageEl.textContent = '❌ Failed to upload: ' + error.message;
+            }
+
+            btn.disabled = false;
+            btn.textContent = '📤 Upload Material';
+        }
+
+        // =============================================
+        // UPDATE TRAINER POINTS
+        // =============================================
+        async function updateTrainerPoints(trainerId) {
+            try {
+                const reviewsSnapshot = await get(ref(db, 'reviews'));
+                let reviewCount = 0;
+                if (reviewsSnapshot.exists()) {
+                    const reviews = reviewsSnapshot.val();
+                    for (const key in reviews) {
+                        if (reviews[key].trainerId === trainerId) reviewCount++;
+                    }
+                }
+
+                const materialsSnapshot = await get(ref(db, 'materials'));
+                let noteCount = 0;
+                let catPoints = 0;
+                let projectCount = 0;
+
+                if (materialsSnapshot.exists()) {

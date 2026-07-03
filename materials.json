@@ -1,0 +1,112 @@
+{
+  "materials": {
+    "material_1": {
+      "title": "Introduction to ICT",
+      "unit": "ICT 101",
+      "department": "CIB",
+      "trainerId": "trainer_uid_here",
+      "trainerName": "John Mwangi",
+      "fileUrl": "https://example.com/ict-101-notes.pdf",
+      "uploadedAt": "2026-07-02T10:00:00.000Z",
+      "questions": [
+        {
+          "q": "What is a computer?",
+          "options": ["A device that processes data", "A type of phone", "A TV", "A printer"],
+          "correctAnswer": 0
+        },
+        {
+          "q": "What is software?",
+          "options": ["Physical parts of a computer", "Programs and data", "A type of monitor", "A keyboard"],
+          "correctAnswer": 1
+        },
+        {
+          "q": "What does CPU stand for?",
+          "options": ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Core Processing Utility"],
+          "correctAnswer": 0
+        },
+        {
+          "q": "Which of these is an input device?",
+          "options": ["Monitor", "Printer", "Keyboard", "Speaker"],
+          "correctAnswer": 2
+        },
+        {
+          "q": "What is RAM?",
+          "options": ["Random Access Memory", "Read-Only Memory", "Rapid Access Module", "Random Application Manager"],
+          "correctAnswer": 0
+        }
+      ]
+    },
+    "material_2": {
+      "title": "Cyber Security Basics",
+      "unit": "CYS 101",
+      "department": "CIB",
+      "trainerId": "trainer_uid_here",
+      "trainerName": "John Mwangi",
+      "fileUrl": "https://example.com/cyber-security.pdf",
+      "uploadedAt": "2026-07-02T11:00:00.000Z",
+      "questions": [
+        {
+          "q": "What is phishing?",
+          "options": ["A type of fishing", "A cyber attack method", "A cooking technique", "A sport"],
+          "correctAnswer": 1
+        },
+        {
+          "q": "What does SSL stand for?",
+          "options": ["Secure Socket Layer", "Safe System Login", "Simple Security Layer", "Secure Server Link"],
+          "correctAnswer": 0
+        },
+        {
+          "q": "What is a firewall?",
+          "options": ["A physical wall", "A network security system", "A type of software", "A hardware component"],
+          "correctAnswer": 1
+        },
+        {
+          "q": "What is encryption?",
+          "options": ["Deleting data", "Converting data into code", "Copying data", "Sharing data"],
+          "correctAnswer": 1
+        },
+        {
+          "q": "Which of these is a strong password?",
+          "options": ["password123", "admin", "P@ssw0rd#2026!", "letmein"],
+          "correctAnswer": 2
+        }
+      ]
+    },
+    "material_3": {
+      "title": "Electrical Circuits",
+      "unit": "ELE 101",
+      "department": "ELE",
+      "trainerId": "trainer_uid_here",
+      "trainerName": "Jane Doe",
+      "fileUrl": "https://example.com/electrical-circuits.pdf",
+      "uploadedAt": "2026-07-02T12:00:00.000Z",
+      "questions": [
+        {
+          "q": "What is voltage?",
+          "options": ["Electric current", "Electric potential difference", "Electric resistance", "Electric power"],
+          "correctAnswer": 1
+        },
+        {
+          "q": "What is the unit of resistance?",
+          "options": ["Ampere", "Volt", "Ohm", "Watt"],
+          "correctAnswer": 2
+        },
+        {
+          "q": "What is Ohm's Law?",
+          "options": ["V = IR", "V = I/R", "I = VR", "R = VI"],
+          "correctAnswer": 0
+        },
+        {
+          "q": "What is the unit of current?",
+          "options": ["Volt", "Ohm", "Ampere", "Watt"],
+          "correctAnswer": 2
+        },
+        {
+          "q": "What is a resistor used for?",
+          "options": ["To store charge", "To oppose current flow", "To increase voltage", "To amplify signal"],
+          "correctAnswer": 1
+        }
+      ]
+    }
+  }
+}
